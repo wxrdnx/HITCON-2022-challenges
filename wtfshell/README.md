@@ -35,42 +35,39 @@ nc 35.194.252.171 42531
 1. No null byte is added after `read_max`.
 2. Thanks to 1., In `chk_pw`, you can leak a heap pointer byte-by-byte (since once a character is mismatched, the function quits immediately).
 3.  In the main function, `gbuff`'s size is 0x410. Try creating chunks with the following layout:
-        ```
-        ........ 0x000410
-        AAAAAAAA AAAAAAAA
-        AAAAAAAA AAAAAAAA
-        ...
-        AAAAAAAA AAAAAAAA
-        00000000 0x000221
-        ↑
-        Notice the zeros here
-        ```
-        The unfortunate thing is that the size of gbuff is 0x400. There are zeros before `0x211`.
+    ```
+    ........ 0x000410
+    AAAAAAAA AAAAAAAA
+    AAAAAAAA AAAAAAAA
+    ...
+    AAAAAAAA AAAAAAAA
+    00000000 0x000221
+    ↑
+    Notice the zeros here
+    ```
+    The unfortunate thing is that the size of gbuff is 0x400. There are zeros before `0x211`.
 	To fill the zeros, you can make use of the `realloc` function in `cmd_rip` or `cmd_wtf`.
-        Using `xfree` is not possible because it clears chunk data before calling `free`. However, `realloc` calls `free` internally when comparing a large or small chunk. In other words, calling `xrealloc` allows you to invoke `free` internally and preserve old chunk data at the same time.
-
-        To sum up, you can allocate a 0x410 chunk filled with `B`, free it using `realloc`, and malloc it back again. This way, the heap turns into:
-        ```
-        ........ 0x000410
-        AAAAAAAA AAAAAAAA
-        AAAAAAAA AAAAAAAA
-        ...
-        AAAAAAAA AAAAAAAA
-        BBBBBBBB 0x000221
-        ```
-        
-    * After calling `strtok` on `gbuff`, the Feng shui becomes:
-        ```
-        ........ 0x000410
-        AAAAAAAA AAAAAAAA
-        AAAAAAAA AAAAAAAA
-        ...
-        AAAAAAAA AAAAAAAA
-        BBBBBBBB 0x000200
-        ```
-
-        This is because `strtok` changes delimeters (".,!?") to null bytes. (`ord('!')` is 0x21).
-4. Now, you can then create overlap chunks using techniques like House of einherjar. You can then modify pointers on the heap and achieve arbitrary read & write.
+    Using `xfree` is not possible because it clears chunk data before calling `free`. However, `realloc` calls `free` internally when comparing a large or small chunk. In other words, calling `xrealloc` allows you to invoke `free` internally and preserve old chunk data at the same time.
+    To sum up, you can allocate a 0x410 chunk filled with `B`, free it using `realloc`, and malloc it back again. This way, the heap turns into:
+    ```
+    ........ 0x000410
+    AAAAAAAA AAAAAAAA
+    AAAAAAAA AAAAAAAA
+    ...
+    AAAAAAAA AAAAAAAA
+    BBBBBBBB 0x000221
+    ```
+4. After calling `strtok` on `gbuff`, the Feng shui becomes:
+    ```
+    ........ 0x000410
+    AAAAAAAA AAAAAAAA
+    AAAAAAAA AAAAAAAA
+    ...
+    AAAAAAAA AAAAAAAA
+    BBBBBBBB 0x000200
+    ```
+    This is because `strtok` changes delimeters (".,!?") to null bytes. (`ord('!')` is 0x21).
+5. Now, you can then create overlap chunks using techniques like House of einherjar. You can then modify pointers on the heap and achieve arbitrary read & write.
 	* Q: how to turn the Bs before `0x200` into `prev_size` ?
         ```
         ........ 0x000410
