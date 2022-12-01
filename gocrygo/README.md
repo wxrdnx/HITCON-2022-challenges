@@ -169,9 +169,9 @@ For now, let's digress a little and trace some interesting variables. First, exa
           }
         ```
         
-        Observe that `v209` is continually xored by a known variable `v115`. There's no encryption happening in between. This means that CFB and OFB are not possible because they rely on the previously calculated ciphertext and encrypted iv, respectively.
+        Observe that `v209` is continually xored by a known variable `v115`. There's no encryption happening in between. This means that CFB is possible because they rely on the previously calculated ciphertext.
 
-        Alternatively, you can try decrypting files in OFB, CFB, CTR mode and see if the decrypted output makes sense. At the end of the day, you'll find out that only CTR mode generates plaintext files that make sense.
+        Alternatively, you can try decrypting files in OFB, CTR mode and see if the decrypted output makes sense. At the end of the day, you'll find out that only CTR mode generates plaintext files that make sense.
 
 ## Decrypt the directory
 
