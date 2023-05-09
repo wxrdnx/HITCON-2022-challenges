@@ -113,7 +113,7 @@ nc 35.194.252.171 42531
 1. Try to turn arbitrary read & write into arbitrary malloc & free.
 	* For me, I choose to free the `tcache_perthread_struct`, malloc the chunk again, then modify `tcache_perthread_struct->counts` and `tcache_perthread_struct->entries`. This is a rather stable arbitrary malloc / free primitive.
     * Of course, there are many other ways to achieve arbitrary malloc / free. Feel free to use techniques you feel comfortable with.
-2. Next, to need to bypass the seccomp filter. 
+2. Next, you need to bypass the seccomp filter. 
 
     ```bash
     $ seccomp-tools dump ./wtfshell
