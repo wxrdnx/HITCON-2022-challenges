@@ -176,7 +176,7 @@ Alternatively, you can try decrypting files in OFB, CTR mode and see if the decr
 
 ## Decrypt the directory
 
-Now you got everything. Write a script to decode `flаg.txt` and `rickroll.jpg.qq`. If nothing goes wrong, you'll spot the flag in these two files. ~~Unless you can to get rickrolled, do not decrypt `cute_kitten.mkv` or `Wallpaper.jpg`~~
+Now you got everything. Write a script to decode `flаg.txt` and `rickroll.jpg.qq`. If nothing goes wrong, you'll spot the flag in these two files. ~~Unless you want to get rickrolled, do not decrypt `cute_kitten.mkv` or `Wallpaper.jpg`~~
 
 > Side note. Did anybody notice that the `а` in `flаg` is a cyrillic letter...?!
 
